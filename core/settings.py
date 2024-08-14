@@ -38,7 +38,12 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS").split()
 
 # Application definition
 
-PROJECT_APPS = []
+PROJECT_APPS = [
+    "apps.contract",
+    "apps.credit",
+    "apps.manufacturer",
+    "apps.product",
+]
 
 INSTALLED_LIBS = [
     "drf_spectacular",
