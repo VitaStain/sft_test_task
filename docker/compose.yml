@@ -1,0 +1,40 @@
+x-default: &default
+  restart: unless-stopped
+  env_file: .env
+  networks:
+    - default
+
+services:
+  api:
+    <<: *default
+    container_name: ${COMPOSE_PROJECT_NAME}-api
+    image: ${IMAGE_NAME:-$COMPOSE_PROJECT_NAME}:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://api:8000" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    expose:
+      - 8000
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    <<: *default
+    container_name: ${COMPOSE_PROJECT_NAME}-db
+    image: postgres:16-alpine
+    volumes:
+      - $COMPOSE_VOLUMES_PATH/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d ${DB_NAME} -U ${DB_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
