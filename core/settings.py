@@ -38,12 +38,19 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS").split()
 
 # Application definition
 
-PROJECT_APPS = []
+PROJECT_APPS = [
+    "apps.contract",
+    "apps.credit",
+    "apps.manufacturer",
+    "apps.product",
+]
 
 INSTALLED_LIBS = [
     "drf_spectacular",
     "rest_framework",
     "drf_standardized_errors",
+    "django_filters",
+    "debug_toolbar",
 ]
 
 CORE_APPS = [
@@ -60,12 +67,15 @@ INSTALLED_APPS = CORE_APPS + INSTALLED_LIBS + PROJECT_APPS
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+INTERNAL_IPS = env("INTERNAL_IPS").split()
 
 ROOT_URLCONF = "core.urls"
 
@@ -151,13 +161,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # DRF
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_standardized_errors.openapi.AutoSchema",
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
-    "DEFAULT_PAGINATION_CLASS": "paint.pagination.BasePagination",
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_THROTTLE_CLASSES": [],
     "DEFAULT_THROTTLE_RATES": {},
     "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
@@ -190,4 +195,8 @@ SPECTACULAR_SETTINGS = {
     "POSTPROCESSING_HOOKS": [
         "drf_standardized_errors.openapi_hooks.postprocess_schema_enums"
     ],
+}
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
 }
