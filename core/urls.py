@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+import debug_toolbar
 from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import (
@@ -22,6 +23,8 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
     SpectacularAPIView,
 )
+
+from core import settings
 
 urlpatterns = [
     # API
@@ -47,3 +50,8 @@ urlpatterns = [
     # DJANGO-ADMIN
     path("admin/", admin.site.urls),
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        path("__debug__/", include(debug_toolbar.urls)),
+    ]
