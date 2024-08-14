@@ -49,6 +49,7 @@ INSTALLED_LIBS = [
     "drf_spectacular",
     "rest_framework",
     "drf_standardized_errors",
+    "django_filters",
 ]
 
 CORE_APPS = [
