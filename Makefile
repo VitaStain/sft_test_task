@@ -26,3 +26,9 @@ makemigrations: # Make migrations
 
 migrate: # Migrate database
 	docker compose --project-directory . run --rm api python manage.py migrate
+
+generate_db: # Migrate database
+	docker compose --project-directory . run --rm api python manage.py generate_db
+
+clear_db: # Migrate database
+	docker compose --project-directory . run --rm api python manage.py clear_db
